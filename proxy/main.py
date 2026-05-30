@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from proxy.streaming.redis_client import log_event
 from proxy.analyzer.request import analyze_request
 from detector.anomaly import analyze_event
+from proxy.recovery.engine import evaluate_and_recover, get_recovery_status, get_active_model
 import os
 
 load_dotenv()
@@ -88,7 +89,7 @@ async def chat(request: ChatRequest):
         except Exception as fallback_error:
             raise HTTPException(status_code=503, detail=f"Both models failed: {fallback_error}")
 
-    # Log event to Redis Stream
+    #log event to redis stream
     log_event(
         request_id=request_id,
         prompt=prompt,
@@ -105,6 +106,12 @@ async def chat(request: ChatRequest):
     )
     if anomaly_result["anomaly_detected"]:
         print(f"⚠️ ANOMALY: {anomaly_result['anomalies']}")
+
+    #auto-recovery
+    evaluate_and_recover(
+        latency_ms=round(latency_ms, 2),
+        error_rate=anomaly_result["current_error_rate"]
+    )
 
 
     return ProxyResponse(
@@ -141,3 +148,7 @@ async def get_anomaly_stats():
         "error_rate": round(sum(error_window) / len(error_window), 4) if error_window else 0,
         "total_requests": len(latency_window)
     }
+
+@app.get("/recovery")
+async def get_recovery():
+    return get_recovery_status()
