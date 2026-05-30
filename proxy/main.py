@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from proxy.streaming.redis_client import log_event
+from proxy.analyzer.request import analyze_request
 import os
 
 load_dotenv()
@@ -14,7 +15,7 @@ app = FastAPI(title="LLMeter", version="0.1.0")
 PRIMARY_MODEL = os.getenv("PRIMARY_MODEL", "gpt-3.5-turbo")
 FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "gpt-3.5-turbo-instruct")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_BASE_URL = "https://api.openai.com/v1/chat/completions"
+OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.groq.com/openai/v1/chat/completions")
 
 
 class ChatRequest(BaseModel):
@@ -61,6 +62,17 @@ async def chat(request: ChatRequest):
     request_id = str(uuid.uuid4())
     fallback_used = False
     prompt = request.messages[-1]["content"] if request.messages else ""
+
+    #threat detection
+    analysis = analyze_request(prompt)
+    if analysis["flagged"]:
+        return ProxyResponse(
+            request_id=request_id,
+            response=f"Request blocked: {analysis['reason']}",
+            model_used="none",
+            latency_ms=0.0,
+            fallback_used=False
+        )
 
     try:
         response, latency_ms = await call_llm(request.messages, PRIMARY_MODEL)
