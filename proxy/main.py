@@ -8,11 +8,20 @@ from proxy.streaming.redis_client import log_event
 from proxy.analyzer.request import analyze_request
 from detector.anomaly import analyze_event
 from proxy.recovery.engine import evaluate_and_recover, get_recovery_status, get_active_model
+from fastapi.middleware.cors import CORSMiddleware
 import os
 
 load_dotenv()
 
 app = FastAPI(title="LLMeter", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 PRIMARY_MODEL = os.getenv("PRIMARY_MODEL", "gpt-3.5-turbo")
 FALLBACK_MODEL = os.getenv("FALLBACK_MODEL", "gpt-3.5-turbo-instruct")
