@@ -20,13 +20,37 @@
 ![LLMeter Demo](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/demo.gif?raw=true)
 
 **Anomaly Detection** — `http://localhost:8000/anomalies`
-![Anomaly](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/anomaly.png?raw=true)
+```json
+{
+  "window_size": 3,
+  "mean_latency_ms": 1322.77,
+  "error_rate": 0,
+  "total_requests": 3
+}
+```
 
 **Drift Detection** — `http://localhost:8000/drift`
-![Drift](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/drift.png?raw=true)
+```json
+{
+  "drift_detected": false,
+  "reason": "Not enough data",
+  "p_value": null,
+  "reference_mean": 337.33,
+  "current_mean": 0
+}
+```
 
 **Auto-Recovery** — `http://localhost:8000/recovery`
-![Recovery](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/recovery.png?raw=true)
+```json
+{
+  "status": "healthy",
+  "active_model": "llama-3.1-8b-instant",
+  "using_fallback": false,
+  "reason": "",
+  "total_incidents": 0,
+  "incident_log": []
+}
+```
 
 
 ## Architecture
