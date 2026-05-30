@@ -8,5 +8,16 @@ services:
       - redis_data:/data
     restart: unless-stopped
 
+  api:
+    build: .
+    container_name: llmeter-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: unless-stopped
+
 volumes:
   redis_data:
