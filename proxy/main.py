@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from proxy.streaming.redis_client import log_event
 from proxy.analyzer.request import analyze_request
+from detector.anomaly import analyze_event
 import os
 
 load_dotenv()
@@ -97,6 +98,15 @@ async def chat(request: ChatRequest):
         fallback_used=fallback_used
     )
 
+    #anomaly detection
+    anomaly_result = analyze_event(
+        latency_ms=round(latency_ms, 2),
+        is_error=False
+    )
+    if anomaly_result["anomaly_detected"]:
+        print(f"⚠️ ANOMALY: {anomaly_result['anomalies']}")
+
+
     return ProxyResponse(
         request_id=request_id,
         response=response,
@@ -118,4 +128,16 @@ async def get_events():
     return {
         "total_events": get_stream_length(),
         "recent_events": events
+    }
+
+@app.get("/anomalies")
+async def get_anomaly_stats():
+    from detector.anomaly import latency_window, error_window
+    import numpy as np
+    
+    return {
+        "window_size": len(latency_window),
+        "mean_latency_ms": round(float(np.mean(latency_window)), 2) if latency_window else 0,
+        "error_rate": round(sum(error_window) / len(error_window), 4) if error_window else 0,
+        "total_requests": len(latency_window)
     }
