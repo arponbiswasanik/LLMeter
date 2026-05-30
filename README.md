@@ -1,6 +1,6 @@
 # LLMeter 
 
-> A production-grade monitoring layer for LLMs — detects anomalies, prevents prompt injection, tracks output drift, and auto-recovers. Works with any OpenAI-compatible API.
+> LLMeter sits between your application and any OpenAI-compatible LLM API — scanning every request for threats, tracking latency and error anomalies in real time, detecting output drift using statistical tests, and automatically switching to a fallback model when the primary degrades. Everything is logged to Redis Streams and visualized on a live dashboard.
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
@@ -112,6 +112,7 @@ npm run dev
 
 ## Project Structure
 
+```
 LLMeter/
 ├── proxy/
 │   ├── main.py                 # FastAPI app + all endpoints
@@ -129,6 +130,7 @@ LLMeter/
 ├── Dockerfile
 ├── docker-compose.yml
 └── .env.example
+```
 
 ## Configuration
 
