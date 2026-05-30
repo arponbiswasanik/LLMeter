@@ -15,6 +15,22 @@
 - **Auto-Recovery** — Automatically switches to fallback model when primary model degrades, restores when healthy
 - **Real-time Dashboard** — Live metrics, latency chart, drift status, incident log, and recent events
 
+## Demo
+
+![LLMeter Demo](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/demo.gif)
+
+### API Endpoints in Action
+
+**Anomaly Detection**
+![Anomaly](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/anomaly.png)
+
+**Drift Detection**
+![Drift](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/drift.png)
+
+**Auto-Recovery**
+![Recovery](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/recovery.png)
+
+
 ## Architecture
 
 ```mermaid
