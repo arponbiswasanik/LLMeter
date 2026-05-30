@@ -17,18 +17,18 @@
 
 ## Demo
 
-![LLMeter Demo](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/demo.gif)
+![LLMeter Demo](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/demo.gif?raw=true)
 
 ### API Endpoints in Action
 
 **Anomaly Detection**
-![Anomaly](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/anomaly.png)
+![Anomaly](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/anomaly.png?raw=true)
 
 **Drift Detection**
-![Drift](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/drift.png)
+![Drift](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/drift.png?raw=true)
 
 **Auto-Recovery**
-![Recovery](https://raw.githubusercontent.com/arponbiswasanik/LLMeter/main/assets/recovery.png)
+![Recovery](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/recovery.png?raw=true)
 
 
 ## Architecture
