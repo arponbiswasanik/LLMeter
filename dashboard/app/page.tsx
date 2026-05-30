@@ -87,7 +87,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-950 text-white p-6">
       <h1 className="text-3xl font-bold mb-2">LLMeter Dashboard</h1>
-      <p className="text-gray-400 mb-8">Real-time LLM monitoring & anomaly detection</p>
+      <p className="text-gray-400 mb-8">Real-time LLM monitoring</p>
 
       {/* Status Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
