@@ -41,23 +41,33 @@ interface Event {
   flag_reason: string;
 }
 
+interface DriftStatus {
+  drift_detected: boolean;
+  reason: string;
+  p_value: number | null;
+  reference_mean: number;
+  current_mean: number;
+}
+
 export default function Dashboard() {
   const [anomaly, setAnomaly] = useState<AnomalyStats | null>(null);
   const [recovery, setRecovery] = useState<RecoveryStatus | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
+  const [drift, setDrift] = useState<DriftStatus | null>(null);
   const [latencyHistory, setLatencyHistory] = useState<{ time: string; latency: number }[]>([]);
 
   const fetchData = async () => {
-    const [a, r, e] = await Promise.all([
+    const [a, r, e, d] = await Promise.all([
       fetch(`${API_BASE}/anomalies`).then((res) => res.json()),
       fetch(`${API_BASE}/recovery`).then((res) => res.json()),
       fetch(`${API_BASE}/events`).then((res) => res.json()),
+      fetch(`${API_BASE}/drift`).then((res) => res.json()),
     ]);
     setAnomaly(a);
     setRecovery(r);
     setEvents(e.recent_events || []);
+    setDrift(d);
 
-    // Build latency history from events
     const history = (e.recent_events || [])
       .slice(0, 20)
       .reverse()
@@ -109,21 +119,39 @@ export default function Dashboard() {
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="time" stroke="#9CA3AF" tick={{ fontSize: 11 }} />
               <YAxis stroke="#9CA3AF" tick={{ fontSize: 11 }} />
-              <Tooltip
-                contentStyle={{ backgroundColor: "#1F2937", border: "none" }}
-              />
-              <Line
-                type="monotone"
-                dataKey="latency"
-                stroke="#6366F1"
-                strokeWidth={2}
-                dot={false}
-              />
+              <Tooltip contentStyle={{ backgroundColor: "#1F2937", border: "none" }} />
+              <Line type="monotone" dataKey="latency" stroke="#6366F1" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         ) : (
           <p className="text-gray-500 text-sm">No data yet — send some requests first.</p>
         )}
+      </div>
+
+      {/* Drift Detection */}
+      <div className="bg-gray-900 rounded-xl p-4 mb-8">
+        <h2 className="text-lg font-semibold mb-4">Output Drift Detection</h2>
+        <div className="flex gap-4">
+          <div className="flex-1 bg-gray-800 rounded-lg p-3">
+            <p className="text-gray-400 text-sm">Status</p>
+            <p className={`text-xl font-bold ${drift?.drift_detected ? "text-red-400" : "text-green-400"}`}>
+              {drift?.drift_detected ? "⚠️ Drift Detected" : "✅ Stable"}
+            </p>
+          </div>
+          <div className="flex-1 bg-gray-800 rounded-lg p-3">
+            <p className="text-gray-400 text-sm">Reference Mean</p>
+            <p className="text-xl font-bold">{drift?.reference_mean ?? 0} words</p>
+          </div>
+          <div className="flex-1 bg-gray-800 rounded-lg p-3">
+            <p className="text-gray-400 text-sm">Current Mean</p>
+            <p className="text-xl font-bold">{drift?.current_mean ?? 0} words</p>
+          </div>
+          <div className="flex-1 bg-gray-800 rounded-lg p-3">
+            <p className="text-gray-400 text-sm">P-Value</p>
+            <p className="text-xl font-bold">{drift?.p_value ?? "—"}</p>
+          </div>
+        </div>
+        <p className="text-gray-500 text-sm mt-2">{drift?.reason}</p>
       </div>
 
       {/* Incident Log */}

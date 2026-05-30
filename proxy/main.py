@@ -9,6 +9,7 @@ from proxy.analyzer.request import analyze_request
 from detector.anomaly import analyze_event
 from proxy.recovery.engine import evaluate_and_recover, get_recovery_status, get_active_model
 from fastapi.middleware.cors import CORSMiddleware
+from detector.drift import add_response_length, detect_drift
 import os
 
 load_dotenv()
@@ -98,6 +99,10 @@ async def chat(request: ChatRequest):
         except Exception as fallback_error:
             raise HTTPException(status_code=503, detail=f"Both models failed: {fallback_error}")
 
+    #drift detection
+    add_response_length(response)
+
+
     #log event to redis stream
     log_event(
         request_id=request_id,
@@ -157,6 +162,10 @@ async def get_anomaly_stats():
         "error_rate": round(sum(error_window) / len(error_window), 4) if error_window else 0,
         "total_requests": len(latency_window)
     }
+
+@app.get("/drift")
+async def get_drift():
+    return detect_drift()
 
 @app.get("/recovery")
 async def get_recovery():
