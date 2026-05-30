@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/python-3.11+-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)
 ![Next.js](https://img.shields.io/badge/Next.js-16-black)
-![License](https://img.shields.io/badge/license-MIT-orange)
+
 
 ## Features
 
@@ -19,15 +19,13 @@
 
 ![LLMeter Demo](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/demo.gif?raw=true)
 
-### API Endpoints in Action
-
-**Anomaly Detection**
+**Anomaly Detection** — `http://localhost:8000/anomalies`
 ![Anomaly](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/anomaly.png?raw=true)
 
-**Drift Detection**
+**Drift Detection** — `http://localhost:8000/drift`
 ![Drift](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/drift.png?raw=true)
 
-**Auto-Recovery**
+**Auto-Recovery** — `http://localhost:8000/recovery`
 ![Recovery](https://github.com/arponbiswasanik/LLMeter/blob/main/assets/recovery.png?raw=true)
 
 
